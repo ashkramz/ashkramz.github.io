@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell($ErrorActionPreference='SilentlyContinue'; \"node: \" + \\(Get-Command node\\).Source; node --version; \"npm: \" + \\(Get-Command npm\\).Source; npm --version; \"npx: \" + \\(Get-Command npx\\).Source)"
+    ]
+  }
+}

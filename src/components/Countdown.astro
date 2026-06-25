@@ -1,0 +1,135 @@
+---
+import { site } from "../config/site";
+
+// Compute initial values on the server so numbers appear instantly (no flash),
+// then a tiny script keeps them ticking in the browser.
+const target = new Date(site.wedding.dateISO).getTime();
+const now = Date.now();
+const diff = Math.max(0, target - now);
+const day = 1000 * 60 * 60 * 24;
+const hour = 1000 * 60 * 60;
+const minute = 1000 * 60;
+
+const init = {
+  days: Math.floor(diff / day),
+  hours: Math.floor((diff % day) / hour),
+  minutes: Math.floor((diff % hour) / minute),
+  seconds: Math.floor((diff % minute) / 1000),
+};
+
+const units = [
+  { key: "days", label: "Days", value: init.days },
+  { key: "hours", label: "Hours", value: init.hours },
+  { key: "minutes", label: "Minutes", value: init.minutes },
+  { key: "seconds", label: "Seconds", value: init.seconds },
+];
+---
+
+<div class="countdown" data-countdown data-target={site.wedding.dateISO}>
+  <p class="countdown__lead serif-accent">Counting down to “I do”</p>
+  <ul class="countdown__grid" data-countdown-grid>
+    {
+      units.map((u) => (
+        <li class="countdown__unit">
+          <span class="countdown__value" data-unit={u.key}>
+            {String(u.value).padStart(2, "0")}
+          </span>
+          <span class="countdown__label">{u.label}</span>
+        </li>
+      ))
+    }
+  </ul>
+  <p class="countdown__done" data-countdown-done hidden>
+    Married on {site.wedding.dateDisplay} — thank you for celebrating with us.
+  </p>
+</div>
+
+<style>
+  .countdown {
+    text-align: center;
+  }
+  .countdown__lead {
+    font-size: var(--step-lead);
+    color: var(--ink-soft);
+    margin-bottom: 1.6rem;
+  }
+  .countdown__grid {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: clamp(1rem, 5vw, 3.5rem);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .countdown__unit {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 4.5rem;
+  }
+  .countdown__value {
+    font-family: var(--font-serif);
+    font-weight: 500;
+    font-size: clamp(2.6rem, 1.8rem + 3vw, 4rem);
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+    color: var(--ink);
+  }
+  .countdown__label {
+    margin-top: 0.6rem;
+    font-family: var(--font-sans);
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+    color: var(--ink-soft);
+  }
+  .countdown__done {
+    max-width: none;
+    font-family: var(--font-serif);
+    font-size: var(--step-h3);
+    color: var(--ink);
+  }
+</style>
+
+<script>
+  const root = document.querySelector<HTMLElement>("[data-countdown]");
+  if (root) {
+    const targetTime = new Date(root.dataset.target ?? "").getTime();
+    const grid = root.querySelector<HTMLElement>("[data-countdown-grid]");
+    const done = root.querySelector<HTMLElement>("[data-countdown-done]");
+    const fields = {
+      days: root.querySelector<HTMLElement>('[data-unit="days"]'),
+      hours: root.querySelector<HTMLElement>('[data-unit="hours"]'),
+      minutes: root.querySelector<HTMLElement>('[data-unit="minutes"]'),
+      seconds: root.querySelector<HTMLElement>('[data-unit="seconds"]'),
+    };
+
+    const pad = (n: number) => String(n).padStart(2, "0");
+
+    const tick = () => {
+      const diff = targetTime - Date.now();
+      if (diff <= 0) {
+        if (grid) grid.hidden = true;
+        if (done) done.hidden = false;
+        return false;
+      }
+      const day = 86400000;
+      const hour = 3600000;
+      const minute = 60000;
+      if (fields.days) fields.days.textContent = pad(Math.floor(diff / day));
+      if (fields.hours) fields.hours.textContent = pad(Math.floor((diff % day) / hour));
+      if (fields.minutes)
+        fields.minutes.textContent = pad(Math.floor((diff % hour) / minute));
+      if (fields.seconds)
+        fields.seconds.textContent = pad(Math.floor((diff % minute) / 1000));
+      return true;
+    };
+
+    if (tick()) {
+      const id = setInterval(() => {
+        if (!tick()) clearInterval(id);
+      }, 1000);
+    }
+  }
+</script>

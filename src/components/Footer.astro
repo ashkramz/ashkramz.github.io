@@ -1,0 +1,62 @@
+---
+import { site } from "../config/site";
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="container center stack">
+    <p class="site-footer__monogram">{site.couple.monogram}</p>
+    <p class="site-footer__names">{site.couple.firstNames}</p>
+    <p class="site-footer__detail">
+      {site.wedding.dateDisplay} &nbsp;·&nbsp; {site.wedding.location}
+    </p>
+    <p class="site-footer__note serif-accent">{site.footer.note}</p>
+    <p>
+      <a class="btn btn--filled" href="/rsvp">RSVP</a>
+    </p>
+    <p class="site-footer__legal">© {year} {site.couple.firstNames}</p>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    background-color: var(--bone);
+    border-top: 1px solid var(--line);
+    padding-block: clamp(3rem, 2rem + 5vw, 6rem);
+  }
+  .site-footer p {
+    max-width: none;
+  }
+  .site-footer__monogram {
+    font-family: var(--font-serif);
+    font-size: 1.6rem;
+    letter-spacing: 0.14em;
+  }
+  .site-footer__names {
+    font-family: var(--font-serif);
+    font-size: clamp(1.8rem, 1.3rem + 2vw, 2.6rem);
+  }
+  .site-footer__detail {
+    font-family: var(--font-sans);
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+    color: var(--ink-soft);
+  }
+  .site-footer__note {
+    font-size: var(--step-lead);
+    color: var(--ink-soft);
+    margin-inline: auto;
+    max-width: 36ch;
+  }
+  .site-footer .btn {
+    margin-top: 0.75rem;
+  }
+  .site-footer__legal {
+    font-size: 0.7rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin-top: 1.5rem;
+  }
+</style>

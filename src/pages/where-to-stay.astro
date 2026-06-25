@@ -1,0 +1,62 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import PageHeader from "../components/PageHeader.astro";
+import HotelCard from "../components/HotelCard.astro";
+import { site } from "../config/site";
+const { stay } = site;
+const showRoomBlock = stay.roomBlockNote && !stay.roomBlockNote.startsWith("[TBD");
+---
+
+<BaseLayout
+  title="Where to Stay"
+  description="Recommended hotels and accommodations near the wedding on Oʻahu."
+>
+  <PageHeader eyebrow="Accommodations" title="Where to Stay" intro={stay.intro} />
+
+  <section class="section" style="padding-top:0;">
+    <div class="container">
+      <div class="hotels">
+        {stay.hotels.map((hotel) => <HotelCard hotel={hotel} />)}
+      </div>
+
+      {
+        showRoomBlock && (
+          <aside class="room-block reveal">
+            <p class="eyebrow">Room Block</p>
+            <p class="room-block__note">{stay.roomBlockNote}</p>
+          </aside>
+        )
+      }
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .hotels {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: clamp(1.25rem, 1rem + 1.5vw, 2rem);
+  }
+  .room-block {
+    margin-top: clamp(2.5rem, 2rem + 2vw, 4rem);
+    text-align: center;
+    padding: clamp(2rem, 1.5rem + 2vw, 3rem);
+    background-color: var(--bone);
+    border-radius: var(--radius);
+  }
+  .room-block__note {
+    margin: 0.75rem auto 0;
+    max-width: 52ch;
+    color: var(--ink-soft);
+  }
+  @media (max-width: 900px) {
+    .hotels {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (max-width: 600px) {
+    .hotels {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

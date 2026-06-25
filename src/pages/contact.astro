@@ -1,0 +1,98 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import PageHeader from "../components/PageHeader.astro";
+import { site } from "../config/site";
+const { contact } = site;
+const hasEmail = contact.email && !contact.email.startsWith("[TBD");
+const hasPhone = contact.phone && contact.phone.trim().length > 0;
+const hasCoordinator =
+  contact.coordinatorName && contact.coordinatorName.trim().length > 0;
+---
+
+<BaseLayout
+  title="Contact"
+  description="Get in touch with Ashley & Michael about the wedding weekend."
+>
+  <PageHeader eyebrow="We're Here to Help" title="Contact" intro={contact.intro} />
+
+  <section class="section" style="padding-top:0;">
+    <div class="container container--narrow center">
+      <p class="contact__note reveal">{contact.note}</p>
+      <hr class="divider" />
+
+      <div class="contact__details reveal">
+        {
+          hasCoordinator && (
+            <div class="contact__row">
+              <p class="contact__label">Wedding Contact</p>
+              <p class="contact__value">{contact.coordinatorName}</p>
+            </div>
+          )
+        }
+        {
+          hasEmail && (
+            <div class="contact__row">
+              <p class="contact__label">Email</p>
+              <p class="contact__value">
+                <a class="link-underline" href={`mailto:${contact.email}`}>
+                  {contact.email}
+                </a>
+              </p>
+            </div>
+          )
+        }
+        {
+          hasPhone && (
+            <div class="contact__row">
+              <p class="contact__label">Phone</p>
+              <p class="contact__value">
+                <a class="link-underline" href={`tel:${contact.phone}`}>
+                  {contact.phone}
+                </a>
+              </p>
+            </div>
+          )
+        }
+      </div>
+
+      <p class="contact__links reveal">
+        <a class="btn" href="/faq">Read the FAQ</a>
+        <a class="btn btn--filled" href="/rsvp">RSVP</a>
+      </p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .contact__note {
+    margin-inline: auto;
+    max-width: 46ch;
+    color: var(--ink-soft);
+  }
+  .contact__details {
+    display: flex;
+    flex-direction: column;
+    gap: 1.6rem;
+    margin-block: 0.5rem 2.5rem;
+  }
+  .contact__label {
+    font-family: var(--font-sans);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--ink-soft);
+  }
+  .contact__value {
+    font-family: var(--font-serif);
+    font-size: var(--step-h3);
+    margin-top: 0.3rem;
+    max-width: none;
+  }
+  .contact__links {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    max-width: none;
+  }
+</style>

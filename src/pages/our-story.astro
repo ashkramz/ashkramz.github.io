@@ -1,0 +1,83 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import PageHeader from "../components/PageHeader.astro";
+import Gallery from "../components/Gallery.astro";
+import { site } from "../config/site";
+const { story, gallery } = site;
+---
+
+<BaseLayout title="Our Story" description="The story of Ashley & Michael.">
+  <PageHeader eyebrow={story.eyebrow} title={story.title} />
+
+  <section class="section" style="padding-top:0;">
+    <div class="container">
+      <div class="story">
+        <figure class="story__figure reveal">
+          <img src={story.image} alt={story.imageAlt} loading="lazy" />
+        </figure>
+        <div class="story__text reveal">
+          {story.paragraphs.map((para) => <p>{para}</p>)}
+        </div>
+      </div>
+
+      <blockquote class="story__quote reveal">
+        <p class="serif-accent">“{story.quote}”</p>
+      </blockquote>
+    </div>
+  </section>
+
+  <section class="section section--bone">
+    <Gallery
+      eyebrow={gallery.eyebrow}
+      title={gallery.title}
+      intro={gallery.intro}
+      photos={gallery.photos}
+    />
+  </section>
+</BaseLayout>
+
+<style>
+  .story {
+    display: grid;
+    grid-template-columns: 0.85fr 1fr;
+    gap: clamp(2rem, 4vw, 4.5rem);
+    align-items: center;
+  }
+  .story__figure {
+    margin: 0;
+  }
+  .story__figure img {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    border-radius: var(--radius);
+  }
+  .story__text > p {
+    margin-top: 1.2rem;
+  }
+  .story__text > p:first-child {
+    margin-top: 0;
+  }
+  .story__quote {
+    margin: clamp(3.5rem, 3rem + 3vw, 6rem) auto 0;
+    max-width: 38ch;
+    text-align: center;
+    border: 0;
+  }
+  .story__quote p {
+    font-size: var(--step-h2);
+    line-height: 1.25;
+    color: var(--ink);
+    max-width: none;
+  }
+
+  @media (max-width: 760px) {
+    .story {
+      grid-template-columns: 1fr;
+    }
+    .story__figure {
+      max-width: 26rem;
+      margin-inline: auto;
+    }
+  }
+</style>

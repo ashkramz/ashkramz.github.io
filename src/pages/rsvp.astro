@@ -1,0 +1,112 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import PageHeader from "../components/PageHeader.astro";
+import { site } from "../config/site";
+const { rsvp } = site;
+const hasForm = rsvp.formEmbedUrl.trim().length > 0;
+const hasEmail = rsvp.fallbackEmail && !rsvp.fallbackEmail.startsWith("[TBD");
+---
+
+<BaseLayout title="RSVP" description="Please RSVP for the wedding of Ashley & Michael.">
+  <PageHeader eyebrow="Kindly Respond" title="RSVP" intro={rsvp.intro} />
+
+  <section class="section" style="padding-top:0;">
+    <div class="container container--narrow">
+      {
+        rsvp.deadline && (
+          <p class="rsvp-deadline center reveal">
+            Please respond by <strong>{rsvp.deadline}</strong>
+          </p>
+        )
+      }
+
+      <div class="rsvp-panel reveal">
+        {
+          hasForm ? (
+            <iframe
+              class="rsvp-frame"
+              src={rsvp.formEmbedUrl}
+              title="RSVP form"
+              loading="lazy"
+              width="100%"
+              height="700"
+              frameborder="0"
+            />
+          ) : (
+            <div class="rsvp-placeholder">
+              <p class="eyebrow">Coming soon</p>
+              <h2 class="rsvp-placeholder__title">Our RSVP form is on its way</h2>
+              <p class="rsvp-placeholder__note">
+                We're putting the finishing touches on it. Please check back shortly —
+                we can't wait to hear that you'll be joining us.
+              </p>
+              <!--
+                ── HOW TO TURN ON THE RSVP FORM ──────────────────────────────
+                1. Build a free form at https://tally.so and publish it.
+                2. Copy its share link (looks like https://tally.so/r/abc123).
+                3. Open  src/config/site.ts , find  formEmbedUrl: "" ,
+                   and paste the link between the quotes. Save. Done.
+                See CONTENT-GUIDE.md for step-by-step screenshots-style help.
+              -->
+            </div>
+          )
+        }
+      </div>
+
+      {
+        hasEmail && (
+          <p class="rsvp-help center reveal">
+            Having trouble with the form?{" "}
+            <a class="link-underline" href={`mailto:${rsvp.fallbackEmail}`}>
+              Email us
+            </a>{" "}
+            and we'll take care of it.
+          </p>
+        )
+      }
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .rsvp-deadline {
+    font-family: var(--font-sans);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--ink-soft);
+    margin-bottom: 2rem;
+  }
+  .rsvp-deadline strong {
+    color: var(--ink);
+  }
+  .rsvp-panel {
+    background-color: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  .rsvp-frame {
+    display: block;
+    width: 100%;
+    border: 0;
+    min-height: 700px;
+  }
+  .rsvp-placeholder {
+    text-align: center;
+    padding: clamp(3rem, 2.5rem + 4vw, 5.5rem) clamp(1.5rem, 1rem + 3vw, 3.5rem);
+  }
+  .rsvp-placeholder__title {
+    margin-top: 0.8rem;
+  }
+  .rsvp-placeholder__note {
+    margin: 1.1rem auto 0;
+    max-width: 44ch;
+    color: var(--ink-soft);
+  }
+  .rsvp-help {
+    margin-top: 1.75rem;
+    font-size: 0.9rem;
+    color: var(--ink-soft);
+  }
+</style>

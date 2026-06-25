@@ -1,0 +1,60 @@
+---
+import SectionHeading from "./SectionHeading.astro";
+import type { GalleryPhoto } from "../config/site";
+
+interface Props {
+  eyebrow?: string;
+  title: string;
+  intro?: string;
+  photos: GalleryPhoto[];
+}
+const { eyebrow, title, intro, photos } = Astro.props;
+---
+
+{
+  photos.length > 0 && (
+    <div class="gallery-wrap">
+      <div class="container">
+        <SectionHeading eyebrow={eyebrow} title={title} intro={intro} />
+        <div class="gallery">
+          {photos.map((photo) => (
+            <figure class="gallery__item reveal">
+              <img src={photo.src} alt={photo.alt} loading="lazy" decoding="async" />
+            </figure>
+          ))}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+<style>
+  /* Editorial masonry using CSS columns — portraits and landscapes keep their
+     natural shape (no cropping) and flow into balanced columns. */
+  .gallery {
+    column-count: 3;
+    column-gap: clamp(0.75rem, 0.5rem + 1vw, 1.25rem);
+  }
+  .gallery__item {
+    margin: 0 0 clamp(0.75rem, 0.5rem + 1vw, 1.25rem);
+    break-inside: avoid;
+  }
+  .gallery__item img {
+    width: 100%;
+    height: auto;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background-color: var(--bone);
+  }
+
+  @media (max-width: 880px) {
+    .gallery {
+      column-count: 2;
+    }
+  }
+  @media (max-width: 540px) {
+    .gallery {
+      column-count: 1;
+    }
+  }
+</style>

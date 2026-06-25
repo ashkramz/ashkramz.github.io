@@ -1,0 +1,19 @@
+{
+  "name": "sakazaki-kramer-wedding",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Wedding website for Ashley Kramer & Michael Sakazaki — February 13, 2027, Oʻahu, Hawaiʻi",
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@fontsource/cormorant-garamond": "^5.2.5",
+    "@fontsource/jost": "^5.2.5",
+    "astro": "^5.6.1"
+  }
+}

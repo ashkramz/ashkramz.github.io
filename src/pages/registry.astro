@@ -1,0 +1,70 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import PageHeader from "../components/PageHeader.astro";
+import { site } from "../config/site";
+const { registry } = site;
+const liveLinks = registry.links.filter(
+  (l) => l.url && l.url !== "#" && !l.label.startsWith("[TBD")
+);
+const hasLiveLinks = liveLinks.length > 0;
+---
+
+<BaseLayout
+  title="Registry"
+  description="Registry information for the wedding of Ashley & Michael."
+>
+  <PageHeader eyebrow={registry.eyebrow} title="Registry" />
+
+  <section class="section" style="padding-top:0;">
+    <div class="container container--narrow center">
+      <p class="lead registry__note reveal serif-accent">{registry.note}</p>
+      <hr class="divider" />
+
+      {
+        hasLiveLinks ? (
+          <ul class="registry__links reveal">
+            {liveLinks.map((link) => (
+              <li>
+                <a
+                  class="btn registry__btn"
+                  href={link.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {link.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p class="registry__pending reveal">
+            Our registry details will appear here soon. Thank you for your patience —
+            and your love.
+          </p>
+        )
+      }
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .registry__note {
+    margin-inline: auto;
+    max-width: 46ch;
+    color: var(--ink-soft);
+  }
+  .registry__links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .registry__pending {
+    margin-inline: auto;
+    max-width: 40ch;
+    color: var(--ink-soft);
+  }
+</style>

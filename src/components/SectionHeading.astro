@@ -1,0 +1,34 @@
+---
+interface Props {
+  eyebrow?: string;
+  title: string;
+  intro?: string;
+  align?: "center" | "left";
+}
+const { eyebrow, title, intro, align = "center" } = Astro.props;
+---
+
+<div class:list={["section-heading", `section-heading--${align}`]}>
+  {eyebrow && <p class="eyebrow">{eyebrow}</p>}
+  <h2 class="section-heading__title">{title}</h2>
+  <hr class:list={["divider", { "divider--left": align === "left" }]} />
+  {intro && <p class="lead section-heading__intro">{intro}</p>}
+</div>
+
+<style>
+  .section-heading {
+    margin-bottom: clamp(2.5rem, 2rem + 2vw, 4rem);
+  }
+  .section-heading--center {
+    text-align: center;
+  }
+  .section-heading--center .section-heading__intro {
+    margin-inline: auto;
+  }
+  .section-heading__title {
+    margin-top: 0.9rem;
+  }
+  .section-heading__intro {
+    max-width: 52ch;
+  }
+</style>

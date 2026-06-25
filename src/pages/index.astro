@@ -1,0 +1,91 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Hero from "../components/Hero.astro";
+import Countdown from "../components/Countdown.astro";
+import { site } from "../config/site";
+---
+
+<BaseLayout>
+  <Hero />
+
+  <!-- Countdown -->
+  <section class="section section--bone">
+    <div class="container">
+      <Countdown />
+    </div>
+  </section>
+
+  <!-- Welcome -->
+  <section class="section">
+    <div class="container container--narrow center stack reveal">
+      <p class="eyebrow">{site.home.heroEyebrow}</p>
+      <h2>{site.home.welcomeHeading}</h2>
+      <hr class="divider" />
+      {site.home.welcomeBody.map((para) => <p class="lead welcome__para">{para}</p>)}
+    </div>
+  </section>
+
+  <!-- Quick links -->
+  <section class="section section--bone">
+    <div class="container">
+      <ul class="quicklinks reveal">
+        {
+          site.home.quickLinks.map((link) => (
+            <li class="quicklinks__item">
+              <a href={link.href} class="quicklinks__link">
+                <span class="quicklinks__label">{link.label}</span>
+                <span class="quicklinks__arrow" aria-hidden="true">→</span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .welcome__para {
+    margin-inline: auto;
+  }
+  .quicklinks {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .quicklinks__link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1.6rem 1.8rem;
+    background-color: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    font-family: var(--font-sans);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--ink);
+    transition: border-color 0.3s var(--ease), transform 0.3s var(--ease);
+  }
+  .quicklinks__link:hover {
+    border-color: var(--accent);
+    transform: translateY(-3px);
+  }
+  .quicklinks__arrow {
+    color: var(--accent);
+    transition: transform 0.3s var(--ease);
+  }
+  .quicklinks__link:hover .quicklinks__arrow {
+    transform: translateX(4px);
+  }
+  @media (max-width: 720px) {
+    .quicklinks {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

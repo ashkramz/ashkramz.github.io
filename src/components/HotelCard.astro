@@ -1,0 +1,110 @@
+---
+import type { Hotel } from "../config/site";
+interface Props {
+  hotel: Hotel;
+}
+const { hotel } = Astro.props;
+const hasLink = hotel.bookingUrl && hotel.bookingUrl !== "#";
+---
+
+<article class="hotel-card reveal">
+  <div class="hotel-card__media">
+    <img src={hotel.image} alt={hotel.imageAlt} loading="lazy" />
+    <span class="hotel-card__tier" aria-label="Price range">{hotel.priceTier}</span>
+  </div>
+  <div class="hotel-card__body">
+    <p class="hotel-card__neighborhood">{hotel.neighborhood}</p>
+    <h3 class="hotel-card__name">{hotel.name}</h3>
+    <p class="hotel-card__distance">{hotel.distance}</p>
+    <p class="hotel-card__desc">{hotel.description}</p>
+    {
+      hasLink ? (
+        <a
+          class="link-underline hotel-card__link"
+          href={hotel.bookingUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {hotel.bookingLabel}
+        </a>
+      ) : (
+        <span class="hotel-card__link hotel-card__link--muted">
+          Booking link coming soon
+        </span>
+      )
+    }
+  </div>
+</article>
+
+<style>
+  .hotel-card {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    overflow: hidden;
+    height: 100%;
+  }
+  .hotel-card__media {
+    position: relative;
+    aspect-ratio: 4 / 3;
+    background-color: var(--bone);
+  }
+  .hotel-card__media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .hotel-card__tier {
+    position: absolute;
+    top: 0.85rem;
+    right: 0.85rem;
+    background-color: var(--ivory);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    padding: 0.25rem 0.65rem;
+    border-radius: var(--radius);
+  }
+  .hotel-card__body {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    padding: clamp(1.4rem, 1.1rem + 1vw, 1.9rem);
+  }
+  .hotel-card__neighborhood {
+    font-family: var(--font-sans);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--accent);
+  }
+  .hotel-card__name {
+    font-size: var(--step-h3);
+    margin-top: 0.5rem;
+  }
+  .hotel-card__distance {
+    font-size: 0.8rem;
+    color: var(--ink-soft);
+    margin-top: 0.35rem;
+  }
+  .hotel-card__desc {
+    margin-top: 0.9rem;
+    color: var(--ink-soft);
+    flex: 1;
+  }
+  .hotel-card__link {
+    margin-top: 1.3rem;
+    align-self: flex-start;
+    font-family: var(--font-sans);
+    font-size: 0.74rem;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+  }
+  .hotel-card__link--muted {
+    color: var(--ink-soft);
+    border-bottom: 0;
+  }
+</style>

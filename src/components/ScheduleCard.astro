@@ -1,0 +1,117 @@
+---
+import type { ScheduleEvent } from "../config/site";
+interface Props {
+  event: ScheduleEvent;
+}
+const { event } = Astro.props;
+---
+
+<article class="schedule-card reveal">
+  <div class="schedule-card__when">
+    <p class="schedule-card__day">{event.day}</p>
+    <p class="schedule-card__time">{event.time}</p>
+  </div>
+  <div class="schedule-card__body">
+    <h3 class="schedule-card__title">{event.title}</h3>
+    <p class="schedule-card__venue">
+      {event.venue}
+      {event.address && event.address !== "[TBD]" && (
+        <span class="schedule-card__address"> — {event.address}</span>
+      )}
+    </p>
+    <p class="schedule-card__note">{event.note}</p>
+    {
+      event.attire && (
+        <p class="schedule-card__attire">
+          <span class="schedule-card__attire-label">Attire</span>
+          {event.attire}
+        </p>
+      )
+    }
+  </div>
+</article>
+
+<style>
+  .schedule-card {
+    display: grid;
+    grid-template-columns: 14rem 1fr;
+    gap: clamp(1rem, 4vw, 3rem);
+    padding: clamp(1.75rem, 1.2rem + 2vw, 2.75rem);
+    background-color: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+  }
+  .schedule-card + .schedule-card {
+    margin-top: 1.25rem;
+  }
+  .schedule-card__when {
+    border-right: 1px solid var(--line);
+    padding-right: clamp(1rem, 3vw, 2rem);
+  }
+  .schedule-card__day {
+    font-family: var(--font-sans);
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--ink-soft);
+  }
+  .schedule-card__time {
+    font-family: var(--font-serif);
+    font-size: 1.6rem;
+    margin-top: 0.4rem;
+    color: var(--ink);
+  }
+  .schedule-card__title {
+    font-size: var(--step-h3);
+  }
+  .schedule-card__venue {
+    font-family: var(--font-sans);
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--accent);
+    margin-top: 0.5rem;
+  }
+  .schedule-card__address {
+    text-transform: none;
+    letter-spacing: 0.01em;
+    color: var(--ink-soft);
+  }
+  .schedule-card__note {
+    margin-top: 0.9rem;
+    color: var(--ink-soft);
+  }
+  .schedule-card__attire {
+    margin-top: 1.1rem;
+    font-size: 0.85rem;
+    color: var(--ink);
+  }
+  .schedule-card__attire-label {
+    display: inline-block;
+    font-family: var(--font-sans);
+    font-size: 0.66rem;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--ink-soft);
+    margin-right: 0.6rem;
+  }
+
+  @media (max-width: 640px) {
+    .schedule-card {
+      grid-template-columns: 1fr;
+    }
+    .schedule-card__when {
+      border-right: 0;
+      border-bottom: 1px solid var(--line);
+      padding-right: 0;
+      padding-bottom: 1rem;
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+    .schedule-card__time {
+      margin-top: 0;
+    }
+  }
+</style>
