@@ -20,6 +20,24 @@ const { item } = Astro.props;
   .faq-item {
     border-bottom: 1px solid var(--line);
   }
+  /* Smooth expand/collapse in browsers that support ::details-content
+     (older browsers simply open instantly — no harm done) */
+  .faq-item::details-content {
+    opacity: 0;
+    block-size: 0;
+    overflow: hidden;
+    transition: content-visibility 0.45s allow-discrete, opacity 0.45s var(--ease),
+      block-size 0.45s var(--ease);
+  }
+  .faq-item[open]::details-content {
+    opacity: 1;
+    block-size: auto;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .faq-item::details-content {
+      transition: none;
+    }
+  }
   .faq-item__q {
     display: flex;
     align-items: center;

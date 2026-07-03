@@ -63,10 +63,26 @@ const units = [
     padding: 0;
   }
   .countdown__unit {
+    position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
     min-width: 4.5rem;
+  }
+  /* Hairline between units (skipped when the row wraps on tiny screens) */
+  .countdown__unit + .countdown__unit::before {
+    content: "";
+    position: absolute;
+    left: calc(-0.5 * clamp(1rem, 5vw, 3.5rem));
+    top: 15%;
+    height: 70%;
+    width: 1px;
+    background-color: var(--line);
+  }
+  @media (max-width: 480px) {
+    .countdown__unit + .countdown__unit::before {
+      display: none;
+    }
   }
   .countdown__value {
     font-family: var(--font-serif);

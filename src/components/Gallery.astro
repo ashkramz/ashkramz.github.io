@@ -17,8 +17,8 @@ const { eyebrow, title, intro, photos } = Astro.props;
       <div class="container">
         <SectionHeading eyebrow={eyebrow} title={title} intro={intro} />
         <div class="gallery">
-          {photos.map((photo) => (
-            <figure class="gallery__item reveal">
+          {photos.map((photo, i) => (
+            <figure class="gallery__item reveal" style={`--reveal-delay: ${(i % 3) * 0.1}s`}>
               <img src={photo.src} alt={photo.alt} loading="lazy" decoding="async" />
             </figure>
           ))}

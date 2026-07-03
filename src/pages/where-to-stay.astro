@@ -16,7 +16,13 @@ const showRoomBlock = stay.roomBlockNote && !stay.roomBlockNote.startsWith("[TBD
   <section class="section" style="padding-top:0;">
     <div class="container">
       <div class="hotels">
-        {stay.hotels.map((hotel) => <HotelCard hotel={hotel} />)}
+        {
+          stay.hotels.map((hotel, i) => (
+            <div style={`display: contents; --reveal-delay: ${i * 0.1}s`}>
+              <HotelCard hotel={hotel} />
+            </div>
+          ))
+        }
       </div>
 
       {

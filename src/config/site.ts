@@ -68,7 +68,7 @@ export const site = {
      - dateISO MUST stay in YYYY-MM-DDTHH:MM format — the countdown reads it.
      - dateDisplay / dayOfWeek are just the words guests see. */
   wedding: {
-    dateISO: "2027-02-13T16:00:00", // 4:00 PM on Feb 13, 2027 (adjust the time when set)
+    dateISO: "2027-02-13T10:00:00", // 10:00 AM ceremony on Feb 13, 2027 (the countdown targets this)
     dateDisplay: "February 13, 2027",
     dayOfWeek: "Saturday",
     location: "Oʻahu, Hawaiʻi",
@@ -179,8 +179,8 @@ export const site = {
         time: "5:30 PM",
         venue: "La Pietra",
         address: "2933 Poni Moi Rd, Honolulu, HI 96815",
-        note: "Cocktail hour to follow the ceremony.",
-        attire: "Isalnd Formal",
+        note: "Cocktail hour to follow the ceremony, with drinks and pūpū as the sun goes down.",
+        attire: "Island Formal",
       },
       {
         title: "Reception",
@@ -188,8 +188,8 @@ export const site = {
         time: "6:30 PM",
         venue: "La Pietra - Main Corridor",
         address: "2933 Poni Moi Rd, Honolulu, HI 96815",
-        note: "Dinner, and dancing to follow the Cocktail hour. Come ready to celebrate",
-        attire: "Island casual",
+        note: "Dinner and dancing to follow the cocktail hour, in the courtyard overlooking Diamond Head. Come ready to celebrate.",
+        attire: "Island Formal",
       },
     ] as ScheduleEvent[],
   },
@@ -320,7 +320,7 @@ export const site = {
     items: [
       {
         q: "What should I wear?",
-        a: "The ceremony and reception are formal / black-tie optional. Think elegant island formal — a cooling breeze is likely in the evening, so a light layer is a good idea. [TBD — adjust to your preference.]",
+        a: "The dress code is Island Formal — elegant, lightweight formalwear: suits or linen jackets, dresses in soft colors. A light layer is welcome for the evening breeze. Attire notes for each event are on the Schedule page.",
       },
       {
         q: "Are children welcome?",
@@ -332,7 +332,7 @@ export const site = {
       },
       {
         q: "Where exactly are the ceremony and reception?",
-        a: "The Catholic ceremony will be held at the Mystical Rose Oratory on the Chaminade University campus, with the reception to follow at La Pietra. Full addresses and times are on the Schedule page. [TBD — confirm details.]",
+        a: "The Catholic ceremony will be held at the Mystical Rose Oratory on the Chaminade University campus, with cocktails and the reception to follow at La Pietra — both in Honolulu, about five minutes apart. Full addresses and times are on the Schedule page.",
       },
       {
         q: "What's the weather like in February?",

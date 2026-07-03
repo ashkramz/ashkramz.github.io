@@ -11,12 +11,23 @@ const { travel } = site;
 >
   <PageHeader eyebrow="Getting to the Island" title="Travel" intro={travel.intro} />
 
+  <div class="container">
+    <figure class="travel-banner reveal">
+      <img
+        src={travel.bannerImage}
+        alt={travel.bannerImageAlt}
+        loading="lazy"
+        decoding="async"
+      />
+    </figure>
+  </div>
+
   <section class="section" style="padding-top:0;">
     <div class="container">
       <div class="travel-grid">
         {
           travel.sections.map((section, i) => (
-            <article class="travel-block reveal">
+            <article class="travel-block reveal" style={`--reveal-delay: ${(i % 2) * 0.12}s`}>
               <p class="travel-block__num">{String(i + 1).padStart(2, "0")}</p>
               <h2 class="travel-block__heading">{section.heading}</h2>
               <div class="travel-block__body">
@@ -31,6 +42,22 @@ const { travel } = site;
 </BaseLayout>
 
 <style>
+  .travel-banner {
+    margin: 0 0 clamp(2.5rem, 2rem + 3vw, 4.5rem);
+  }
+  .travel-banner img {
+    width: 100%;
+    aspect-ratio: 21 / 9;
+    object-fit: cover;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+  }
+  @media (max-width: 640px) {
+    .travel-banner img {
+      aspect-ratio: 16 / 10;
+    }
+  }
+
   .travel-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);

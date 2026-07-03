@@ -43,11 +43,31 @@ const hasLiveLinks = liveLinks.length > 0;
           </p>
         )
       }
+
+      <figure class="registry__banner reveal">
+        <img
+          src={registry.bannerImage}
+          alt={registry.bannerImageAlt}
+          loading="lazy"
+          decoding="async"
+        />
+      </figure>
     </div>
   </section>
 </BaseLayout>
 
 <style>
+  .registry__banner {
+    margin: clamp(2.5rem, 2rem + 2vw, 4rem) 0 0;
+  }
+  .registry__banner img {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+  }
+
   .registry__note {
     margin-inline: auto;
     max-width: 46ch;
