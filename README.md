@@ -47,24 +47,17 @@ npm run preview  # preview the production build locally
 
 ## Deploy
 
-This is a fully static site — host it anywhere. Two free, one-click options:
+**Live now:** https://ashkramz.github.io — hosted on **GitHub Pages**, deployed
+automatically by [`.github/workflows/deploy.yml`](./.github/workflows/deploy.yml)
+on every push to `main` (repo: https://github.com/ashkramz/ashkramz.github.io).
+See [DEPLOY.md](./DEPLOY.md) for the plain-English guide.
 
-### Vercel (recommended)
-1. Push this folder to a GitHub repository.
-2. Go to [vercel.com](https://vercel.com) → **Add New… → Project** → import the repo.
-3. Vercel auto-detects Astro. Click **Deploy**.
-4. Every future commit (including edits made in GitHub's web editor) redeploys
-   automatically.
-
-### Netlify
-1. Push to GitHub.
-2. [netlify.com](https://netlify.com) → **Add new site → Import an existing project**.
-3. Build command: `npm run build` — Publish directory: `dist`.
-4. Deploy.
+The site is fully static, so it can move to Vercel/Netlify/Cloudflare later with
+no code changes if ever desired.
 
 ### Custom domain
-After deploying, add your domain in the host's dashboard, then update `site:` in
-[`astro.config.mjs`](./astro.config.mjs) to that URL (used for SEO and the
+Add it under the repo's **Settings → Pages → Custom domain**, then update `site:`
+in [`astro.config.mjs`](./astro.config.mjs) to that URL (used for SEO and the
 social-share preview).
 
 ## Notes

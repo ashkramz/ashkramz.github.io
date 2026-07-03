@@ -217,11 +217,11 @@ you're replacing (e.g. `hero-home.webp`), and drop it in the folder.
 You have two easy options:
 
 ### Option A — Edit on GitHub, publish automatically (easiest)
-Once the site is connected to Vercel or Netlify (a one-time setup — see
-`README.md`):
-1. Open your project on **github.com** and click into `src/config/site.ts`.
-2. Click the **pencil ✏️ icon** to edit, make your changes.
-3. Scroll down and click **Commit changes**.
+Your site is **already live** at **https://ashkramz.github.io** and republishes
+itself whenever you commit a change:
+1. Open **https://github.com/ashkramz/ashkramz.github.io** and sign in.
+2. Click into `src/config/site.ts` and click the **pencil ✏️ icon** to edit.
+3. Make your changes, scroll down, and click **Commit changes**.
 4. Your site rebuilds and goes live on its own in **about a minute**. ✨
 
 ### Option B — Preview on your own computer first
