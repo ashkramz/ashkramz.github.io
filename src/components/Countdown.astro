@@ -92,6 +92,20 @@ const units = [
     font-variant-numeric: tabular-nums;
     color: var(--ink);
   }
+  .countdown__value.tick {
+    animation: count-tick 0.5s var(--ease);
+  }
+  @keyframes count-tick {
+    from {
+      opacity: 0.25;
+      transform: translateY(-5px);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .countdown__value.tick {
+      animation: none;
+    }
+  }
   .countdown__label {
     margin-top: 0.6rem;
     font-family: var(--font-sans);
@@ -123,6 +137,15 @@ const units = [
 
     const pad = (n: number) => String(n).padStart(2, "0");
 
+    // Update a digit and replay its gentle "tick" animation when it changes
+    const set = (el: HTMLElement | null, value: string) => {
+      if (!el || el.textContent === value) return;
+      el.textContent = value;
+      el.classList.remove("tick");
+      void el.offsetWidth;
+      el.classList.add("tick");
+    };
+
     const tick = () => {
       const diff = targetTime - Date.now();
       if (diff <= 0) {
@@ -133,12 +156,10 @@ const units = [
       const day = 86400000;
       const hour = 3600000;
       const minute = 60000;
-      if (fields.days) fields.days.textContent = pad(Math.floor(diff / day));
-      if (fields.hours) fields.hours.textContent = pad(Math.floor((diff % day) / hour));
-      if (fields.minutes)
-        fields.minutes.textContent = pad(Math.floor((diff % hour) / minute));
-      if (fields.seconds)
-        fields.seconds.textContent = pad(Math.floor((diff % minute) / 1000));
+      set(fields.days, pad(Math.floor(diff / day)));
+      set(fields.hours, pad(Math.floor((diff % day) / hour)));
+      set(fields.minutes, pad(Math.floor((diff % hour) / minute)));
+      set(fields.seconds, pad(Math.floor((diff % minute) / 1000)));
       return true;
     };
 

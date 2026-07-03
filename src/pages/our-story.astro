@@ -45,6 +45,17 @@ const { story, gallery } = site;
   }
   .story__figure {
     margin: 0;
+    position: relative;
+  }
+  /* Offset hairline frame behind the photo — quiet editorial detail */
+  .story__figure::after {
+    content: "";
+    position: absolute;
+    inset: 14px -14px -14px 14px;
+    border: 1px solid var(--accent);
+    border-radius: var(--radius);
+    opacity: 0.45;
+    z-index: -1;
   }
   .story__figure img {
     width: 100%;

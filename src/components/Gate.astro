@@ -1,0 +1,187 @@
+---
+import { site } from "../config/site";
+// A gentle password screen shown once per device. Configured in site.ts →
+// gate. Deterrent-level privacy (like The Knot/Zola gates): it keeps out
+// strangers and bots; RSVP responses never live on this site regardless.
+---
+
+{
+  site.gate.enabled && (
+    <div class="gate" data-gate-screen data-pass={site.gate.password}>
+      <div class="gate__card">
+        <p class="gate__monogram">{site.couple.monogram}</p>
+        <h1 class="gate__names">{site.couple.firstNames}</h1>
+        <p class="gate__date">
+          {site.wedding.dateDisplay} &nbsp;·&nbsp; {site.wedding.location}
+        </p>
+        <hr class="divider" />
+        <form class="gate__form" data-gate-form>
+          <label class="gate__label" for="gate-password">
+            {site.gate.hint}
+          </label>
+          <div class="gate__row">
+            <input
+              class="gate__input"
+              id="gate-password"
+              name="password"
+              type="password"
+              autocomplete="off"
+              autocapitalize="none"
+              required
+            />
+            <button class="btn btn--filled gate__btn" type="submit">
+              Enter
+            </button>
+          </div>
+          <p class="gate__error" data-gate-error hidden>
+            That's not quite it — please check your invitation.
+          </p>
+        </form>
+      </div>
+    </div>
+  )
+}
+
+<style>
+  .gate {
+    /* Hidden unless the <html data-gate="locked"> flag is set before paint */
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    background-color: var(--ivory);
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    overflow-y: auto;
+  }
+  :global(html[data-gate="locked"]) .gate {
+    display: flex;
+  }
+  :global(html[data-gate="locked"]) {
+    overflow: hidden;
+  }
+
+  .gate__card {
+    width: min(30rem, 100%);
+    text-align: center;
+    background-color: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: clamp(2.5rem, 2rem + 3vw, 4rem) clamp(1.5rem, 1rem + 3vw, 3rem);
+    animation: gate-rise 0.9s var(--ease) both;
+  }
+  @keyframes gate-rise {
+    from {
+      opacity: 0;
+      transform: translateY(14px);
+    }
+  }
+
+  .gate__monogram {
+    font-family: var(--font-serif);
+    font-size: 1.4rem;
+    letter-spacing: 0.16em;
+    color: var(--accent);
+  }
+  .gate__names {
+    font-size: clamp(1.9rem, 1.4rem + 2vw, 2.6rem);
+    margin-top: 0.7rem;
+  }
+  .gate__date {
+    margin: 0.7rem auto 0;
+    max-width: none;
+    font-family: var(--font-sans);
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+    color: var(--ink-soft);
+  }
+  .gate__label {
+    display: block;
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 1.1rem;
+    color: var(--ink-soft);
+    margin-bottom: 1rem;
+  }
+  .gate__row {
+    display: flex;
+    gap: 0.6rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .gate__input {
+    flex: 1 1 12rem;
+    min-width: 0;
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    letter-spacing: 0.12em;
+    text-align: center;
+    color: var(--ink);
+    background-color: var(--ivory);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 0.85em 1em;
+    transition: border-color 0.25s var(--ease);
+  }
+  .gate__input:focus {
+    outline: none;
+    border-color: var(--accent);
+  }
+  .gate__btn {
+    flex: 0 0 auto;
+  }
+  .gate__error {
+    margin: 1rem auto 0;
+    max-width: none;
+    font-size: 0.85rem;
+    color: #8c3b2e;
+  }
+
+  .gate__card.is-wrong {
+    animation: gate-shake 0.4s var(--ease);
+  }
+  @keyframes gate-shake {
+    20% {
+      transform: translateX(-7px);
+    }
+    45% {
+      transform: translateX(6px);
+    }
+    70% {
+      transform: translateX(-4px);
+    }
+    100% {
+      transform: none;
+    }
+  }
+</style>
+
+<script>
+  const screen = document.querySelector<HTMLElement>("[data-gate-screen]");
+  if (screen) {
+    const form = screen.querySelector<HTMLFormElement>("[data-gate-form]");
+    const error = screen.querySelector<HTMLElement>("[data-gate-error]");
+    const input = screen.querySelector<HTMLInputElement>("#gate-password");
+    const card = screen.querySelector<HTMLElement>(".gate__card");
+    const pass = (screen.dataset.pass ?? "").trim().toLowerCase();
+
+    form?.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const guess = (input?.value ?? "").trim().toLowerCase();
+      if (guess === pass && pass.length > 0) {
+        try {
+          localStorage.setItem("am-gate", "open");
+        } catch {}
+        document.documentElement.dataset.gate = "open";
+      } else {
+        if (error) error.hidden = false;
+        card?.classList.remove("is-wrong");
+        void card?.offsetWidth;
+        card?.classList.add("is-wrong");
+        input?.select();
+      }
+    });
+  }
+</script>

@@ -317,6 +317,54 @@ p {
 }
 
 /* ----------------------------------------------------------------------------
+   ENTRANCES & FLOATING RSVP
+   -------------------------------------------------------------------------- */
+/* Shared "rise in" entrance used by page headers and the hero */
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Floating RSVP pill (phones only, appears after scrolling) */
+.floating-rsvp {
+  position: fixed;
+  right: 1.1rem;
+  bottom: 1.1rem;
+  z-index: 90;
+  display: none;
+  font-family: var(--font-sans);
+  font-size: 0.78rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  padding: 0.9em 1.7em;
+  border-radius: 999px;
+  background-color: var(--ink);
+  color: var(--ivory);
+  box-shadow: 0 12px 30px -12px rgba(22, 19, 15, 0.5);
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.4s var(--ease), transform 0.4s var(--ease);
+  pointer-events: none;
+}
+.floating-rsvp.is-shown {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+@media (max-width: 720px) {
+  .floating-rsvp {
+    display: inline-block;
+  }
+}
+
+/* ----------------------------------------------------------------------------
    SCROLL REVEAL (progressive enhancement; safe if JS is off)
    -------------------------------------------------------------------------- */
 .reveal {

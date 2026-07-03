@@ -10,6 +10,57 @@ const hasAddress = !!event.address && !event.address.startsWith("[TBD");
 const mapUrl = hasAddress
   ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${event.venue}, ${event.address}`)}`
   : null;
+
+// "Add to calendar" links, generated from the day + time strings.
+// Hawaiʻi is UTC-10 year-round (no daylight saving), so the conversion is
+// simple and unambiguous. Hidden automatically while day/time are [TBD].
+const MONTHS: Record<string, number> = {
+  january: 0, february: 1, march: 2, april: 3, may: 4, june: 5,
+  july: 6, august: 7, september: 8, october: 9, november: 10, december: 11,
+};
+function parseStartUTC(day: string, time: string): Date | null {
+  const dm = day.match(/([A-Za-z]+)\s+(\d{1,2}),\s*(\d{4})/);
+  const tm = time.match(/(\d{1,2}):(\d{2})\s*([AP]M)/i);
+  if (!dm || !tm) return null;
+  const month = MONTHS[dm[1].toLowerCase()];
+  if (month === undefined) return null;
+  let hours = Number(tm[1]) % 12;
+  if (tm[3].toUpperCase() === "PM") hours += 12;
+  // HST → UTC is +10 hours
+  return new Date(Date.UTC(Number(dm[3]), month, Number(dm[2]), hours + 10, Number(tm[2])));
+}
+const fmtICS = (d: Date) => d.toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "");
+const start = parseStartUTC(event.day, event.time);
+let icsHref: string | null = null;
+let gcalHref: string | null = null;
+if (start) {
+  const end = new Date(start.getTime() + 2 * 3600000); // assume ~2 hours
+  const location = hasAddress ? `${event.venue}, ${event.address}` : event.venue;
+  const ics = [
+    "BEGIN:VCALENDAR",
+    "VERSION:2.0",
+    "PRODID:-//Ashley and Michael Wedding//EN",
+    "BEGIN:VEVENT",
+    `UID:${fmtICS(start)}-${event.title.replace(/\W+/g, "")}@ashkramz.github.io`,
+    `DTSTAMP:${fmtICS(new Date())}`,
+    `DTSTART:${fmtICS(start)}`,
+    `DTEND:${fmtICS(end)}`,
+    `SUMMARY:${event.title} — Ashley & Michael's Wedding`,
+    `LOCATION:${location.replace(/,/g, "\\,")}`,
+    `DESCRIPTION:${event.note.replace(/,/g, "\\,")}`,
+    "END:VEVENT",
+    "END:VCALENDAR",
+  ].join("\r\n");
+  icsHref = `data:text/calendar;charset=utf-8,${encodeURIComponent(ics)}`;
+  gcalHref =
+    "https://calendar.google.com/calendar/render?action=TEMPLATE" +
+    `&text=${encodeURIComponent(`${event.title} — Ashley & Michael's Wedding`)}` +
+    `&dates=${fmtICS(start)}/${fmtICS(end)}` +
+    `&location=${encodeURIComponent(location)}` +
+    `&details=${encodeURIComponent(event.note)}` +
+    "&ctz=Pacific/Honolulu";
+}
+const icsFilename = `${event.title.toLowerCase().replace(/\W+/g, "-")}.ics`;
 ---
 
 <article class="schedule-card reveal">
@@ -35,18 +86,39 @@ const mapUrl = hasAddress
           </p>
         )
       }
-      {
-        mapUrl && (
-          <a
-            class="schedule-card__map"
-            href={mapUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            View map <span aria-hidden="true">→</span>
-          </a>
-        )
-      }
+      <span class="schedule-card__actions">
+        {
+          mapUrl && (
+            <a
+              class="schedule-card__action"
+              href={mapUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              View map <span aria-hidden="true">→</span>
+            </a>
+          )
+        }
+        {
+          icsHref && (
+            <a class="schedule-card__action" href={icsHref} download={icsFilename}>
+              Add to calendar <span aria-hidden="true">↓</span>
+            </a>
+          )
+        }
+        {
+          gcalHref && (
+            <a
+              class="schedule-card__action"
+              href={gcalHref}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Google
+            </a>
+          )
+        }
+      </span>
     </div>
   </div>
 </article>
@@ -118,7 +190,12 @@ const mapUrl = hasAddress
     font-size: 0.85rem;
     color: var(--ink);
   }
-  .schedule-card__map {
+  .schedule-card__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 1.4rem;
+  }
+  .schedule-card__action {
     font-family: var(--font-sans);
     font-size: 0.72rem;
     font-weight: 500;
@@ -128,7 +205,7 @@ const mapUrl = hasAddress
     border-bottom: 1px solid transparent;
     transition: border-color 0.25s var(--ease);
   }
-  .schedule-card__map:hover {
+  .schedule-card__action:hover {
     border-color: var(--accent);
   }
   .schedule-card__attire-label {

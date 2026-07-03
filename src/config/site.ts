@@ -366,6 +366,19 @@ export const site = {
   },
 
   /* ==========================================================================
+     11. PRIVACY GATE
+     A gentle password screen guests see once per device. Put the password on
+     your invitations. Set enabled to false to turn the gate off entirely.
+     (Friendly honesty: this keeps out strangers and search engines, like the
+     gates on The Knot/Zola — it is not bank-vault security.)
+     ======================================================================== */
+  gate: {
+    enabled: true,
+    password: "Aloha2027", // change this to anything you like
+    hint: "Enter the password from your invitation",
+  },
+
+  /* ==========================================================================
      FOOTER
      ======================================================================== */
   footer: {

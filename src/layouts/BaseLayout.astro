@@ -2,6 +2,7 @@
 import "../styles/global.css";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
+import Gate from "../components/Gate.astro";
 import { site } from "../config/site";
 
 interface Props {
@@ -38,14 +39,36 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url).toString(
     <meta name="twitter:image" content={ogImage} />
 
     <meta name="theme-color" content="#fbf8f2" />
+
+    <!-- Keep the site out of search results — guests get the link directly -->
+    <meta name="robots" content="noindex, nofollow" />
+
+    <!-- Password gate check. Runs before first paint so there's no flash of
+         content: sets <html data-gate="locked|open"> which CSS acts on. -->
+    <script is:inline define:vars={{ gateEnabled: site.gate.enabled }}>
+      let open = !gateEnabled;
+      try {
+        open = open || localStorage.getItem("am-gate") === "open";
+      } catch {}
+      document.documentElement.dataset.gate = open ? "open" : "locked";
+    </script>
   </head>
   <body>
+    <Gate />
     <a class="skip-link" href="#main">Skip to content</a>
     <Header />
     <main id="main">
       <slot />
     </main>
     <Footer />
+
+    {
+      /* Floating RSVP button — appears on phones after scrolling a bit,
+         on every page except the RSVP page itself */
+      Astro.url.pathname.replace(/\/+$/, "") !== "/rsvp" && (
+        <a class="floating-rsvp" href="/rsvp" data-floating-rsvp>RSVP</a>
+      )
+    }
 
     <!-- Gentle fade-in on scroll. Pure progressive enhancement: if this script
          doesn't run, everything is still fully visible. -->
@@ -67,6 +90,16 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url).toString(
           { rootMargin: "0px 0px -10% 0px", threshold: 0.08 }
         );
         reveals.forEach((el) => io.observe(el));
+      }
+
+      // Floating RSVP pill: fade in after the guest scrolls past the top
+      const pill = document.querySelector<HTMLElement>("[data-floating-rsvp]");
+      if (pill) {
+        const update = () => {
+          pill.classList.toggle("is-shown", window.scrollY > 480);
+        };
+        window.addEventListener("scroll", update, { passive: true });
+        update();
       }
     </script>
   </body>

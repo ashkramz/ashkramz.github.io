@@ -38,13 +38,27 @@ const { eyebrow, title, intro, photos } = Astro.props;
   .gallery__item {
     margin: 0 0 clamp(0.75rem, 0.5rem + 1vw, 1.25rem);
     break-inside: avoid;
-  }
-  .gallery__item img {
-    width: 100%;
-    height: auto;
+    overflow: hidden;
     border: 1px solid var(--line);
     border-radius: var(--radius);
     background-color: var(--bone);
+  }
+  .gallery__item img {
+    display: block;
+    width: 100%;
+    height: auto;
+    transition: transform 1.1s var(--ease);
+  }
+  .gallery__item:hover img {
+    transform: scale(1.04);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .gallery__item img {
+      transition: none;
+    }
+    .gallery__item:hover img {
+      transform: none;
+    }
   }
 
   @media (max-width: 880px) {

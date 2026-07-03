@@ -90,6 +90,25 @@ Form link here instead; paste its "Send → link" URL the same way.)
 
 ---
 
+## 2b. The guest password
+
+The site shows guests an elegant password screen once per device (so put the
+password on your invitations!). It's controlled in the `gate` section:
+
+```ts
+gate: {
+  enabled: true,              // set to false to remove the password screen
+  password: "Aloha2027",      // change this to anything you like
+  hint: "Enter the password from your invitation",
+},
+```
+
+Honest note: like the password gates on The Knot and Zola, this politely keeps
+out strangers and search engines — it isn't bank-vault security. Your RSVP
+responses are never stored on the website, so they stay private regardless.
+
+---
+
 ## 3. Schedule events — add, edit, or remove
 
 Find the `schedule` section. Each event is one block that looks like this:

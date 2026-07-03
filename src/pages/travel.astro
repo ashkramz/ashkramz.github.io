@@ -3,6 +3,26 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import PageHeader from "../components/PageHeader.astro";
 import { site } from "../config/site";
 const { travel } = site;
+
+// Venue maps, derived from the Schedule — one map per unique address, labeled
+// with every event held there. They appear once real addresses are in site.ts.
+const byAddress = new Map<string, { label: string; roles: string[]; embed: string }>();
+for (const e of site.schedule.events) {
+  if (!e.address || e.address.startsWith("[TBD")) continue;
+  const existing = byAddress.get(e.address);
+  if (existing) {
+    existing.roles.push(e.title);
+  } else {
+    byAddress.set(e.address, {
+      label: e.venue.split(",")[0],
+      roles: [e.title],
+      embed: `https://maps.google.com/maps?q=${encodeURIComponent(`${e.venue}, ${e.address}`)}&z=15&output=embed`,
+    });
+  }
+}
+const venues = [...byAddress.values()]
+  .slice(0, 2)
+  .map((v) => ({ ...v, role: v.roles.join(" & ") }));
 ---
 
 <BaseLayout
@@ -37,6 +57,31 @@ const { travel } = site;
           ))
         }
       </div>
+
+      {
+        venues.length > 0 && (
+          <div class="venue-maps">
+            <h2 class="venue-maps__title center reveal">Finding the venues</h2>
+            <div class="venue-maps__grid">
+              {venues.map((v, i) => (
+                <figure class="venue-map reveal" style={`--reveal-delay: ${i * 0.12}s`}>
+                  <figcaption class="venue-map__caption">
+                    <span class="venue-map__role">{v.role}</span>
+                    <span class="venue-map__name">{v.label}</span>
+                  </figcaption>
+                  <iframe
+                    src={v.embed}
+                    title={`Map of ${v.label}`}
+                    loading="lazy"
+                    referrerpolicy="no-referrer-when-downgrade"
+                    allowfullscreen
+                  />
+                </figure>
+              ))}
+            </div>
+          </div>
+        )
+      }
     </div>
   </section>
 </BaseLayout>
@@ -80,8 +125,59 @@ const { travel } = site;
     color: var(--ink-soft);
   }
 
+  .venue-maps {
+    margin-top: clamp(3rem, 2.5rem + 3vw, 5.5rem);
+  }
+  .venue-maps__title {
+    font-size: var(--step-h2);
+    margin-bottom: clamp(1.75rem, 1.4rem + 1.5vw, 2.75rem);
+  }
+  .venue-maps__grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: clamp(1.25rem, 1rem + 1.5vw, 2rem);
+  }
+  .venue-map {
+    margin: 0;
+    background-color: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  .venue-map__caption {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1.1rem 1.4rem;
+    border-bottom: 1px solid var(--line);
+  }
+  .venue-map__role {
+    font-family: var(--font-sans);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--accent);
+  }
+  .venue-map__name {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 1.05rem;
+    color: var(--ink-soft);
+    text-align: right;
+  }
+  .venue-map iframe {
+    display: block;
+    width: 100%;
+    height: 300px;
+    border: 0;
+  }
+
   @media (max-width: 720px) {
     .travel-grid {
+      grid-template-columns: 1fr;
+    }
+    .venue-maps__grid {
       grid-template-columns: 1fr;
     }
   }
